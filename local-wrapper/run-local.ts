@@ -153,22 +153,24 @@ async function runLocal(options: LocalRunOptions) {
       const originalStdoutWrite = process.stdout.write.bind(process.stdout);
       const originalConsoleLog = console.log;
 
-      // Suppress output during execution
-      process.stdout.write = (() => true) as any;
-      console.log = () => {};
+      try {
+        // Suppress output during execution
+        process.stdout.write = (() => true) as any;
+        console.log = () => {};
 
-      await runClaude(promptConfig.path, {
-        claudeArgs: options.claudeArgs,
-        model: options.model,
-        maxTurns: options.maxTurns,
-        mcpConfig: options.mcpConfig,
-        allowedTools: options.allowedTools,
-        disallowedTools: options.disallowedTools,
-      });
-
-      // Restore output
-      process.stdout.write = originalStdoutWrite;
-      console.log = originalConsoleLog;
+        await runClaude(promptConfig.path, {
+          claudeArgs: options.claudeArgs,
+          model: options.model,
+          maxTurns: options.maxTurns,
+          mcpConfig: options.mcpConfig,
+          allowedTools: options.allowedTools,
+          disallowedTools: options.disallowedTools,
+        });
+      } finally {
+        // Always restore output, even if runClaude crashes
+        process.stdout.write = originalStdoutWrite;
+        console.log = originalConsoleLog;
+      }
 
       // Read and format the execution file
       const EXECUTION_FILE = "/tmp/claude-execution-output.json";
