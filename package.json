@@ -9,6 +9,11 @@
     "test": "bun test",
     "typecheck": "tsc --noEmit"
   },
+  "bun": {
+    "overrides": {
+      "@actions/core": "./local-wrapper/core-stub.ts"
+    }
+  },
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/github": "^6.0.1",

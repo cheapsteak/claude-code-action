@@ -2,3 +2,10 @@
 node_modules
 
 **/.claude/settings.local.json
+
+# Local wrapper build artifacts
+local-wrapper/dist/
+local-wrapper/.DS_Store
+
+# Temporary output files
+output.txt
