@@ -34,6 +34,12 @@ mkdir -p "$PACKAGE_DIR"
 cp "${DIST_DIR}/review-local-${PLATFORM}" "${PACKAGE_DIR}/review-local"
 chmod +x "${PACKAGE_DIR}/review-local"
 
+# Copy Gatekeeper fix script (for macOS)
+if [[ "$PLATFORM" == darwin-* ]]; then
+    cp "local-wrapper/fix-macos-gatekeeper.sh" "${PACKAGE_DIR}/"
+    chmod +x "${PACKAGE_DIR}/fix-macos-gatekeeper.sh"
+fi
+
 # Create installation script
 cat > "${PACKAGE_DIR}/install.sh" << 'EOF'
 #!/bin/bash
@@ -54,9 +60,19 @@ else
     fi
 fi
 
+# Remove macOS quarantine attribute before installing
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    xattr -d com.apple.quarantine review-local 2>/dev/null || true
+fi
+
 # Install binary
 $SUDO cp review-local "$INSTALL_DIR/review-local"
 $SUDO chmod +x "$INSTALL_DIR/review-local"
+
+# Remove quarantine from installed binary too
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    $SUDO xattr -d com.apple.quarantine "$INSTALL_DIR/review-local" 2>/dev/null || true
+fi
 
 echo "✅ Installation complete!"
 echo ""
@@ -95,6 +111,9 @@ A standalone tool that runs Claude Code locally with git repository context.
 
    # User-local (no sudo):
    ./install.sh --user
+
+   **macOS Users**: If you get "review-local is damaged", the install script
+   automatically fixes this. If issues persist, run: ./fix-macos-gatekeeper.sh
 
 3. Authenticate with Claude:
    claude auth login

@@ -221,6 +221,21 @@ Then follow the same distribution steps above.
 
 ## Troubleshooting
 
+### "review-local is damaged and can't be opened" (macOS)
+
+This is macOS Gatekeeper blocking unsigned binaries. Fix it with:
+
+```bash
+# If using the distribution package:
+./fix-macos-gatekeeper.sh
+
+# Or manually:
+xattr -d com.apple.quarantine review-local
+chmod +x review-local
+```
+
+The `package-for-distribution.sh` script automatically includes the fix script and the install script removes the quarantine attribute, so this should be rare.
+
 ### "claude: command not found"
 
 Install Claude CLI:
