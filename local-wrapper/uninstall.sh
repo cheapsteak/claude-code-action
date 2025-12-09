@@ -2,8 +2,10 @@
 #
 # Uninstall script for review-local
 #
-# Usage: ./local-wrapper/uninstall.sh [--user]
-#   --user: Uninstall from ~/.local/bin instead of /usr/local/bin
+# Usage: ./local-wrapper/uninstall.sh [--system]
+#   --system: Uninstall from /usr/local/bin instead of ~/.local/bin
+#
+# By default, uninstalls from ~/.local/bin (user-level)
 
 set -e
 
@@ -17,16 +19,13 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🗑️  Uninstalling review-local...${NC}\n"
 
 # Parse arguments
-USER_INSTALL=false
-if [ "$1" = "--user" ]; then
-    USER_INSTALL=true
+SYSTEM_INSTALL=false
+if [ "$1" = "--system" ]; then
+    SYSTEM_INSTALL=true
 fi
 
 # Determine install location
-if [ "$USER_INSTALL" = true ]; then
-    INSTALL_DIR="$HOME/.local/bin"
-    echo -e "${YELLOW}📂 Uninstalling from: ${INSTALL_DIR} (user)${NC}"
-else
+if [ "$SYSTEM_INSTALL" = true ]; then
     INSTALL_DIR="/usr/local/bin"
     echo -e "${YELLOW}📂 Uninstalling from: ${INSTALL_DIR} (system-wide)${NC}"
 
@@ -35,6 +34,9 @@ else
         echo -e "${YELLOW}🔐 Need sudo privileges...${NC}"
         SUDO="sudo"
     fi
+else
+    INSTALL_DIR="$HOME/.local/bin"
+    echo -e "${YELLOW}📂 Uninstalling from: ${INSTALL_DIR} (user)${NC}"
 fi
 
 # Check if binary exists

@@ -26,11 +26,11 @@ This tool adapts the `claude-code-action` GitHub Action to work as a standalone 
 ### 2. Install
 
 ```bash
-# System-wide (requires sudo)
-sudo ./local-wrapper/install.sh
+# User-level (default, no sudo required)
+./local-wrapper/install.sh
 
-# Or user-local (no sudo)
-./local-wrapper/install.sh --user
+# Or system-wide (requires sudo)
+sudo ./local-wrapper/install.sh --system
 ```
 
 ### 3. Authenticate
@@ -284,11 +284,11 @@ review-local --no-git-context "your request"
 ## Uninstalling
 
 ```bash
-# System-wide
-sudo ./local-wrapper/uninstall.sh
+# User-level (default)
+./local-wrapper/uninstall.sh
 
-# User-local
-./local-wrapper/uninstall.sh --user
+# System-wide
+sudo ./local-wrapper/uninstall.sh --system
 ```
 
 ## Comparison with GitHub Action

@@ -2,8 +2,10 @@
 #
 # Install script for review-local
 #
-# Usage: ./local-wrapper/install.sh [--user]
-#   --user: Install to ~/.local/bin instead of /usr/local/bin (no sudo required)
+# Usage: ./local-wrapper/install.sh [--system]
+#   --system: Install to /usr/local/bin instead of ~/.local/bin (requires sudo)
+#
+# By default, installs to ~/.local/bin (user-level, no sudo required)
 
 set -e
 
@@ -17,9 +19,9 @@ NC='\033[0m' # No Color
 echo -e "${BLUE}🚀 Installing review-local...${NC}\n"
 
 # Parse arguments
-USER_INSTALL=false
-if [ "$1" = "--user" ]; then
-    USER_INSTALL=true
+SYSTEM_INSTALL=false
+if [ "$1" = "--system" ]; then
+    SYSTEM_INSTALL=true
 fi
 
 # Detect platform
@@ -50,11 +52,7 @@ if [ ! -f "$BINARY" ]; then
 fi
 
 # Determine install location
-if [ "$USER_INSTALL" = true ]; then
-    INSTALL_DIR="$HOME/.local/bin"
-    mkdir -p "$INSTALL_DIR"
-    echo -e "${YELLOW}📂 Installing to: ${INSTALL_DIR} (user)${NC}"
-else
+if [ "$SYSTEM_INSTALL" = true ]; then
     INSTALL_DIR="/usr/local/bin"
     echo -e "${YELLOW}📂 Installing to: ${INSTALL_DIR} (system-wide)${NC}"
 
@@ -63,6 +61,10 @@ else
         echo -e "${YELLOW}🔐 Need sudo privileges...${NC}"
         SUDO="sudo"
     fi
+else
+    INSTALL_DIR="$HOME/.local/bin"
+    mkdir -p "$INSTALL_DIR"
+    echo -e "${YELLOW}📂 Installing to: ${INSTALL_DIR} (user)${NC}"
 fi
 
 # Copy binary
