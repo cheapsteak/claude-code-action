@@ -50,5 +50,13 @@ fi
 echo -e "${YELLOW}🗑️  Removing binary...${NC}"
 $SUDO rm "$INSTALL_DIR/review-local"
 
+# Remove Claude Code slash command
+SLASH_COMMAND="$HOME/.claude/commands/review-local.md"
+if [ -f "$SLASH_COMMAND" ]; then
+    echo -e "${YELLOW}🗑️  Removing slash command...${NC}"
+    rm "$SLASH_COMMAND"
+    echo -e "${GREEN}✓ Slash command removed${NC}"
+fi
+
 echo -e "\n${GREEN}✅ Uninstall complete!${NC}"
 echo -e "${BLUE}review-local has been removed from ${INSTALL_DIR}${NC}"

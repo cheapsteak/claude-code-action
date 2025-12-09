@@ -14,6 +14,7 @@ This tool adapts the `claude-code-action` GitHub Action to work as a standalone 
 - ✅ Installable globally - use in any repository
 - ✅ Cross-platform binary (macOS/Linux)
 - ✅ Supports all base-action features (MCP servers, custom settings, etc.)
+- ✅ Includes `/review-local` slash command for Claude Code
 
 ## Quick Start
 
@@ -77,12 +78,13 @@ review-local --working-dir ~/my-project "review the test coverage"
 review-local --mcp-config ~/.claude/my-mcp.json "analyze database schema"
 ```
 
-### As a Slash Command (in this repo)
+### As a Slash Command
 
-When working in this repository with Claude Code:
+The installer also adds a `/review-local` slash command to `~/.claude/commands/`. Use it from any Claude Code session:
 
 ```
-/review "check for bugs in the recent changes"
+/review-local "check for bugs in the recent changes"
+/review-local   # defaults to "Review the recent changes and suggest improvements"
 ```
 
 ## How It Works

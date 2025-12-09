@@ -72,6 +72,23 @@ echo -e "${YELLOW}📦 Copying binary...${NC}"
 $SUDO cp "$BINARY" "$INSTALL_DIR/review-local"
 $SUDO chmod +x "$INSTALL_DIR/review-local"
 
+# Remove macOS quarantine attribute if present (prevents Gatekeeper issues)
+if [ "$OS" = "darwin" ]; then
+    $SUDO xattr -d com.apple.quarantine "$INSTALL_DIR/review-local" 2>/dev/null || true
+fi
+
+# Install Claude Code slash command
+CLAUDE_COMMANDS_DIR="$HOME/.claude/commands"
+SLASH_COMMAND_FILE="local-wrapper/review-local.md"
+if [ -f "$SLASH_COMMAND_FILE" ]; then
+    echo -e "${YELLOW}📦 Installing slash command...${NC}"
+    mkdir -p "$CLAUDE_COMMANDS_DIR"
+    cp "$SLASH_COMMAND_FILE" "$CLAUDE_COMMANDS_DIR/review-local.md"
+    echo -e "${GREEN}✓ Slash command installed: /review-local${NC}"
+else
+    echo -e "${YELLOW}⚠️  Slash command file not found, skipping${NC}"
+fi
+
 echo -e "\n${GREEN}✅ Installation complete!${NC}"
 
 # Check if in PATH
