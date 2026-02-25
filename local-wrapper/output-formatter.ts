@@ -98,7 +98,9 @@ export class OutputFormatter {
           if (this.showProgress) {
             const toolName = content.name || "tool";
             const description = content.input?.description || "";
-            process.stderr.write(`\n▸ Running: ${toolName}${description ? ` - ${description}` : ""}\n`);
+            process.stderr.write(
+              `\n▸ Running: ${toolName}${description ? ` - ${description}` : ""}\n`,
+            );
           }
         }
       }
@@ -141,7 +143,7 @@ export class OutputFormatter {
       const durationSec = (this.summary.duration_ms / 1000).toFixed(1);
       const cost = this.summary.cost_usd.toFixed(4);
       process.stderr.write(
-        `\n✅ Completed in ${durationSec}s | Cost: $${cost} | ${this.summary.turns} turns\n`
+        `\n✅ Completed in ${durationSec}s | Cost: $${cost} | ${this.summary.turns} turns\n`,
       );
     }
   }
@@ -164,7 +166,7 @@ export class OutputFormatter {
 export function formatClaudeOutput(
   output: string,
   mode: OutputMode = "default",
-  showProgress: boolean = true
+  showProgress: boolean = true,
 ): FormattedOutput {
   const formatter = new OutputFormatter(mode, showProgress);
 

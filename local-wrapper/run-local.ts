@@ -39,7 +39,8 @@ interface LocalRunOptions {
 async function runLocal(options: LocalRunOptions) {
   try {
     const outputMode = options.outputMode || "default";
-    const showProgress = !options.noProgress && outputMode !== "quiet" && outputMode !== "json";
+    const showProgress =
+      !options.noProgress && outputMode !== "quiet" && outputMode !== "json";
 
     if (showProgress) {
       process.stderr.write("🚀 Starting local Claude Code execution...\n\n");
@@ -49,7 +50,9 @@ async function runLocal(options: LocalRunOptions) {
     if (options.workingDir) {
       process.chdir(options.workingDir);
       if (showProgress) {
-        process.stderr.write(`📂 Changed directory to: ${options.workingDir}\n\n`);
+        process.stderr.write(
+          `📂 Changed directory to: ${options.workingDir}\n\n`,
+        );
       }
     }
 
@@ -70,8 +73,12 @@ async function runLocal(options: LocalRunOptions) {
     } catch (error) {
       if (showProgress) {
         process.stderr.write("⚠️  No API key found in environment variables\n");
-        process.stderr.write("💡 Assuming Claude CLI is already authenticated (claude auth login)\n");
-        process.stderr.write("   If this fails, either run 'claude auth login' or set ANTHROPIC_API_KEY\n\n");
+        process.stderr.write(
+          "💡 Assuming Claude CLI is already authenticated (claude auth login)\n",
+        );
+        process.stderr.write(
+          "   If this fails, either run 'claude auth login' or set ANTHROPIC_API_KEY\n\n",
+        );
       }
     }
 
@@ -136,7 +143,16 @@ async function runLocal(options: LocalRunOptions) {
       }
     }
 
+    // Unset CLAUDECODE so Claude doesn't refuse to run nested inside another Claude session
+    delete process.env.CLAUDECODE;
+
     const { runClaude } = await import("../base-action/src/run-claude");
+
+    // Find the claude executable
+    const { execSync } = await import("child_process");
+    const pathToClaudeCodeExecutable = execSync("which claude", {
+      encoding: "utf-8",
+    }).trim();
 
     // In verbose mode, just pass through everything
     if (outputMode === "verbose") {
@@ -147,6 +163,7 @@ async function runLocal(options: LocalRunOptions) {
         mcpConfig: options.mcpConfig,
         allowedTools: options.allowedTools,
         disallowedTools: options.disallowedTools,
+        pathToClaudeCodeExecutable,
       });
     } else {
       // For other modes, suppress runClaude's output and format afterward
@@ -165,6 +182,7 @@ async function runLocal(options: LocalRunOptions) {
           mcpConfig: options.mcpConfig,
           allowedTools: options.allowedTools,
           disallowedTools: options.disallowedTools,
+          pathToClaudeCodeExecutable,
         });
       } finally {
         // Always restore output, even if runClaude crashes
@@ -187,7 +205,9 @@ async function runLocal(options: LocalRunOptions) {
         formatter.displayFinal();
       } catch (error) {
         if (showProgress) {
-          process.stderr.write(`\n⚠️  Could not read execution results: ${error}\n`);
+          process.stderr.write(
+            `\n⚠️  Could not read execution results: ${error}\n`,
+          );
         }
       }
     }

@@ -121,6 +121,7 @@ The installer also adds a `/review-local` slash command to `~/.claude/commands/`
 We use Bun's module override feature to replace `@actions/core` with a local stub, allowing us to run the base-action code unmodified:
 
 **package.json:**
+
 ```json
 {
   "bun": {
@@ -132,6 +133,7 @@ We use Bun's module override feature to replace `@actions/core` with a local stu
 ```
 
 This means:
+
 - ✅ No code duplication
 - ✅ Base-action remains untouched
 - ✅ Easy to update when base-action changes
@@ -241,6 +243,7 @@ The `package-for-distribution.sh` script automatically includes the fix script a
 ### "claude: command not found"
 
 Install Claude CLI:
+
 ```bash
 curl -fsSL https://claude.ai/install.sh | bash
 ```
@@ -248,6 +251,7 @@ curl -fsSL https://claude.ai/install.sh | bash
 ### "jq: command not found"
 
 Install jq:
+
 ```bash
 # macOS
 brew install jq
@@ -262,11 +266,13 @@ sudo yum install jq
 ### "Authentication failed"
 
 Either authenticate with Claude:
+
 ```bash
 claude auth login
 ```
 
 Or set API key:
+
 ```bash
 export ANTHROPIC_API_KEY="sk-ant-..."
 ```
@@ -274,11 +280,13 @@ export ANTHROPIC_API_KEY="sk-ant-..."
 ### "No git repository found"
 
 Make sure you're running in a git repository:
+
 ```bash
 git init  # If needed
 ```
 
 Or skip git context:
+
 ```bash
 review-local --no-git-context "your request"
 ```
@@ -295,16 +303,16 @@ sudo ./local-wrapper/uninstall.sh --system
 
 ## Comparison with GitHub Action
 
-| Feature | GitHub Action | Local Tool |
-|---------|---------------|------------|
-| Execution Environment | GitHub Actions | Local machine |
-| Context Source | PR/Issue data | Git repository |
-| Authentication | OIDC + GitHub App | Claude CLI auth or API key |
-| Comment Updates | GitHub comments | Terminal output |
-| Branch Operations | Automatic PR branches | Manual git commands |
-| MCP Servers | GitHub-specific | Any MCP server |
-| Cost | GitHub Actions minutes | Local compute |
-| Use Case | CI/CD automation | Interactive development |
+| Feature               | GitHub Action          | Local Tool                 |
+| --------------------- | ---------------------- | -------------------------- |
+| Execution Environment | GitHub Actions         | Local machine              |
+| Context Source        | PR/Issue data          | Git repository             |
+| Authentication        | OIDC + GitHub App      | Claude CLI auth or API key |
+| Comment Updates       | GitHub comments        | Terminal output            |
+| Branch Operations     | Automatic PR branches  | Manual git commands        |
+| MCP Servers           | GitHub-specific        | Any MCP server             |
+| Cost                  | GitHub Actions minutes | Local compute              |
+| Use Case              | CI/CD automation       | Interactive development    |
 
 ## License
 

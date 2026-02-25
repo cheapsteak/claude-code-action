@@ -16,6 +16,7 @@ Execute the local review tool:
 ```
 
 This will:
+
 1. Gather current git repository context (branch, status, recent commits)
 2. Format it similar to how the GitHub Action formats PR/issue context
 3. Execute Claude Code with the enhanced prompt using base-action

@@ -58,20 +58,28 @@ export async function getGitContext(): Promise<GitContext> {
   }
 
   // Get default branch
-  const defaultBranch = (await gitCommand("git symbolic-ref refs/remotes/origin/HEAD"))
-    ?.replace("refs/remotes/origin/", "") || "main";
+  const defaultBranch =
+    (await gitCommand("git symbolic-ref refs/remotes/origin/HEAD"))?.replace(
+      "refs/remotes/origin/",
+      "",
+    ) || "main";
 
   // Get current branch
-  const currentBranch = (await gitCommand("git branch --show-current")) || "unknown";
+  const currentBranch =
+    (await gitCommand("git branch --show-current")) || "unknown";
 
   // Get upstream branch
-  const upstream = await gitCommand(`git rev-parse --abbrev-ref ${currentBranch}@{upstream}`);
+  const upstream = await gitCommand(
+    `git rev-parse --abbrev-ref ${currentBranch}@{upstream}`,
+  );
 
   // Count commits ahead/behind
-  const commitsAhead = await gitCommand(`git rev-list --count ${upstream}..HEAD`);
+  const commitsAhead = await gitCommand(
+    `git rev-list --count ${upstream}..HEAD`,
+  );
 
   // Get git status
-  const statusOutput = await gitCommand("git status --porcelain") || "";
+  const statusOutput = (await gitCommand("git status --porcelain")) || "";
   const statusLines = statusOutput.split("\n").filter(Boolean);
 
   const modified: string[] = [];
@@ -103,9 +111,8 @@ export async function getGitContext(): Promise<GitContext> {
   }
 
   // Get recent commits
-  const logOutput = await gitCommand(
-    "git log -10 --pretty=format:'%H|%an|%ai|%s'"
-  ) || "";
+  const logOutput =
+    (await gitCommand("git log -10 --pretty=format:'%H|%an|%ai|%s'")) || "";
 
   const recentCommits = logOutput
     .split("\n")
@@ -207,7 +214,9 @@ export function formatGitContext(context: GitContext): string {
     parts.push("## Recent Commits\n");
     context.recentCommits.slice(0, 5).forEach((commit) => {
       parts.push(`- **${commit.hash.substring(0, 7)}** ${commit.message}`);
-      parts.push(`  *${commit.author}* on ${new Date(commit.date).toLocaleDateString()}`)
+      parts.push(
+        `  *${commit.author}* on ${new Date(commit.date).toLocaleDateString()}`,
+      );
     });
   }
 
