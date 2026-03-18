@@ -291,6 +291,24 @@ Or skip git context:
 review-local --no-git-context "your request"
 ```
 
+## Customizing Review Instructions
+
+The `/review-local` slash command supports a global instructions file that gets prepended to every review prompt. This lets you enforce a consistent review format and filter out noise.
+
+A default recommended prompt is included at `local-wrapper/review-local-instructions.md`. To use it:
+
+```bash
+# Option 1: Copy to your home directory
+cp local-wrapper/review-local-instructions.md ~/.review-local-instructions.md
+
+# Option 2: Symlink (stays in sync with repo updates)
+ln -sf "$(pwd)/local-wrapper/review-local-instructions.md" ~/.review-local-instructions.md
+```
+
+You can also create a per-repo override at `.review-local-instructions.md` in any repository root — it gets appended after the global instructions.
+
+The default prompt enforces a two-phase review process (draft privately, then filter) and a structured output format with severity ratings and a verdict.
+
 ## Uninstalling
 
 ```bash
